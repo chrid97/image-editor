@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<!-- <input type="file" accept="image/*" id="fileInput"> -->
+<div class="container">
+    <aside class="sidebar">
+        <div class="sidebar-content">
+
+            <div class="switch">
+                <label for="grayscale">Grayscale</label>
+                <input type="checkbox" id="grayscale" onclick="runPipeline()">
+            </div>
+
+            <div class="switch">
+                <label for="invert">Invert</label>
+                <input type="checkbox" id="invert" onclick="runPipeline()">
+            </div>
+            
+            <!-- Red -->
+            <div class="slider">
+                <div class="label">
+                    <label for="red">Red</label>
+                    <input type="number" id="red-input" min="-255" max="255" value="0" onchange="updateInput(this.value, 'red-slider')">
+                </div>
+                <input class="slider" type="range" min="-255" max="255" id="red-slider" value="" onchange="updateInput(this.value, 'red-input')">
+            </div>
+            
+            <!-- Brightness -->
+            <div class="slider">
+                <div class="label">
+                    <label for="brightness">Brightness</label>
+                    <input type="number" id="brightness-input" min="-255" max="255" value="0" onchange="updateInput(this.value, 'brightness-slider')">
+                </div>
+                <input class="slider" type="range" min="-255" max="255" value="0" id="brightness-slider" onchange="updateInput(this.value, 'brightness-input')">
+            </div>
+
+            <!-- Contrast -->
+            <div class="slider">
+                <div class="label">
+                    <label for="contrast">Contrast</label>
+                    <input type="number" id="contrast-input" min="-255" max="255" value="0" onchange="updateInput(this.value, 'contrast-slider')">
+                </div>
+                <input class="slider" type="range" min="-255" max="255" value="0" id="contrast-slider" onchange="updateInput(this.value, 'contrast-input')">
+            </div>
+        <div>
+    </aside>
+    <div style="background-color: #171719">
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="./index.js"></script>

@@ -1,0 +1,55 @@
+html, body {
+    margin: 0;
+    padding 0;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+aside {
+    width: 240px;
+    /* background-color: #292C31; */
+    background-color: #1F2024;
+    color: white;
+}
+
+.sidebar-content {
+    padding: 0 20px;
+}
+
+.sidebar-content > div {
+    padding: 5px 0;
+}
+
+.label {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.label input:last-child {
+    background: none;
+    text-align: right;
+    color: #ddd;
+    border: 2px solid hsla(0,0%,100%,0);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.slider {
+    width: 100%;
+}
+
+.switch {
+    display: flex;
+    justify-content: space-between;
+}
+
+
