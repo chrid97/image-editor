@@ -173,7 +173,7 @@ function runPipeline() {
         newImage = invertColors(imgData);
     }
     
-    const brightness = document.getElementById('brightness-input').value;
+    const brightness = Number(document.getElementById('brightness-input').value);
     newImage = changeBrightness(newImage, brightness);
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
     ctx.putImageData(newImage, 0, 0);
