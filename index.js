@@ -9,10 +9,11 @@ canvas.width = document.body.clientWidth - 240;
 canvas.height = 1000;
 
 let imgData = undefined;
+let originalImageData = undefined;
 
 const src = "https://unsplash.it/640/480/?image=808";
 
-const grayscale = document.getElementById('grayscale');
+const grayscaleCheckbox = document.getElementById('grayscale');
 const invertCheckbox = document.getElementById('invert');
 
 function updateInput(val, id) {
@@ -32,8 +33,7 @@ function getPixelIndex(x, y) {
     return (x + y * imgData.width) * 4;
 }
 
-function setGrayscale(imageData) {
-    const data = imageData.data;
+function setGrayscale(data) {
     for(let i = 0; i < data.length; i += 4) {
         // const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
         const avg = data[i]*0.2126 + data[i + 1]*0.7152 + data[i + 2]*0.0722;
@@ -41,17 +41,16 @@ function setGrayscale(imageData) {
         data[i + 1] = avg; // green
         data[i + 2] = avg; // blue
     }
-    return imageData;
+    return data;
 }
 
-function invertColors(imageData) {
-    const data = imageData.data;
+function invertColors(data) {
     for(let i = 0; i < data.length; i += 4) {
-        data[i]     = 255 - data[i]; // red
-        data[i + 1] = 255 - data[i + 1]; // green
-        data[i + 2] = 255 - data[i + 2]; // blue
+        data[i]     = clamp(255 - data[i]); // red
+        data[i + 1] = clamp(255 - data[i + 1]); // green
+        data[i + 2] = clamp(255 - data[i + 2]); // blue
     }
-    return imageData;
+    return data;
 }
 
 function boxBlur(imageData) {
@@ -115,7 +114,14 @@ function customBoxBlur(imageData, strength) {
     return imageData;
 }
 
-function addRed() {}
+function addRed(data, value) {
+    // const data = imageData.data;
+    for(let i = 0; i < data.length; i += 4) {
+        data[i] = clamp(data[i] + value);
+    } 
+
+    return data;
+}
 
 function addColor(x, y, value, imageData, offset) {
     const index = getPixelIndex(x, y) + offset;
@@ -123,19 +129,29 @@ function addColor(x, y, value, imageData, offset) {
 }
 
 function changeBrightness(imageData, brightness) {
-    const data = imageData.data;
-    for(let y = 0; y < imageData.height; y++) {
-        for(let x = 0; x < imageData.width; x++) {
-            const redIndex = getPixelIndex(x, y);
-            const greenIndex = getPixelIndex(x, y) + 1;
-            const blueIndex = getPixelIndex(x, y) + 2;
-
-            data[redIndex]   = clamp(data[redIndex] + brightness);
-            data[greenIndex] = clamp(data[greenIndex] + brightness);
-            data[blueIndex]  = clamp(data[blueIndex] + brightness);
-            
-        }
+    // const data = imageData.data;
+    // for(let y = 0; y < imageData.height; y++) {
+        // for(let x = 0; x < imageData.width; x++) {
+        //     const redIndex = getPixelIndex(x, y);
+        //     const greenIndex = getPixelIndex(x, y) + 1;
+        //     const blueIndex = getPixelIndex(x, y) + 2;
+        //
+        //     data[redIndex]   = clamp(data[redIndex] + brightness);
+        //     data[greenIndex] = clamp(data[greenIndex] + brightness);
+        //     data[blueIndex]  = clamp(data[blueIndex] + brightness);
+        //     
+        // }
+    // }
+    for (let i = 0; i < imageData.length; i++) {
+        imageData[i]    = clamp(imageData[i] + brightness);
+        imageData[i + 1]= clamp(imageData[i + 1] + brightness);
+        imageData[i + 2]= clamp(imageData[i + 2] + brightness);
     }
+
+    return imageData;
+}
+
+function contrast(imageData, contrastValue) {
     return imageData;
 }
 
@@ -149,32 +165,37 @@ function clamp(value) {
 
 const srcImage = loadImage(src);
 
-// const brightnessFilter = Number(brightness.value);
 
 srcImage.addEventListener('load', () => {
     // ctx.drawImage(srcImage, canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2);
     ctx.drawImage(srcImage, 0, 0);
     imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height);
-    // const newImage = boxBlur(getImageData(image));
-    // ctx.putImageData(newImage, 685, 0);
-    // const grayscaleImage = customBoxBlur(getImageData(image), 1);
-    // ctx.putImageData(grayscaleImage, 0, 500);
-    // const bright = changeBrightness(getImageData(image), 100);
-    // ctx.putImageData(bright, 0, 500);
+
+    originalImageData = imgData.data.slice();
 }, false);
 
 function runPipeline() {
-    let newImage = imgData;
-    if(grayscale.checked) {
-        newImage = setGrayscale(imgData);
+    let newImage = originalImageData.slice();
+    if(grayscaleCheckbox.checked) {
+        newImage = setGrayscale(newImage);
     }
 
     if(invertCheckbox.checked) {
-        newImage = invertColors(imgData);
+        newImage = invertColors(newImage);
     }
     
     const brightness = Number(document.getElementById('brightness-input').value);
     newImage = changeBrightness(newImage, brightness);
+    
+    const red = Number(document.getElementById('red-slider').value);
+    newImage = addRed(newImage, red);
+
+    const contrastValue = Number(document.getElementById('contrast-slider').value);
+    newImage = contrast(newImage, contrastValue);
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
-    ctx.putImageData(newImage, 0, 0);
+
+    for (let i = 0; i < imgData.data.length; i++) {
+        imgData.data[i] = newImage[i]
+    }
+    ctx.putImageData(imgData, 0, 0);
 }
