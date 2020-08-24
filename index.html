@@ -27,7 +27,25 @@
                 </div>
                 <input class="slider" type="range" min="-255" max="255" id="red-slider" value="" onchange="updateInput(this.value, 'red-input')">
             </div>
+
+            <!-- Green -->
+            <div class="slider">
+                <div class="label">
+                    <label for="green">Green</label>
+                    <input type="number" id="green-input" min="-255" max="255" value="0" onchange="updateInput(this.value, 'green-slider')">
+                </div>
+                <input class="slider" type="range" min="-255" max="255" id="green-slider" value="" onchange="updateInput(this.value, 'green-input')">
+            </div>
             
+            <!-- Blue -->
+            <div class="slider">
+                <div class="label">
+                    <label for="blue">Blue</label>
+                    <input type="number" id="blue-input" min="-255" max="255" value="0" onchange="updateInput(this.value, 'blue-slider')">
+                </div>
+                <input class="slider" type="range" min="-255" max="255" id="blue-slider" value="" onchange="updateInput(this.value, 'blue-input')">
+            </div>
+
             <!-- Brightness -->
             <div class="slider">
                 <div class="label">

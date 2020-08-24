@@ -2,8 +2,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 const R_OFFSET = 0;
-const B_OFFSET = 1;
-const G_OFFSET = 2;
+const G_OFFSET = 1;
+const B_OFFSET = 2;
 
 canvas.width = document.body.clientWidth - 240;
 canvas.height = 1000;
@@ -114,19 +114,18 @@ function customBoxBlur(imageData, strength) {
     return imageData;
 }
 
-function addRed(data, value) {
-    // const data = imageData.data;
+function addColor(data, value, colorOffset) {
     for(let i = 0; i < data.length; i += 4) {
-        data[i] = clamp(data[i] + value);
+        data[i + colorOffset] = clamp(data[i + colorOffset] + value);
     } 
 
     return data;
 }
 
-function addColor(x, y, value, imageData, offset) {
-    const index = getPixelIndex(x, y) + offset;
-    imageData.data = 10;
-}
+// function addColor(x, y, value, imageData, offset) {
+//     const index = getPixelIndex(x, y) + offset;
+//     imageData.data = 10;
+// }
 
 function changeBrightness(imageData, brightness) {
     // const data = imageData.data;
@@ -188,7 +187,13 @@ function runPipeline() {
     newImage = changeBrightness(newImage, brightness);
     
     const red = Number(document.getElementById('red-slider').value);
-    newImage = addRed(newImage, red);
+    newImage = addColor(newImage, red, R_OFFSET);
+
+    const green = Number(document.getElementById('green-slider').value);
+    newImage = addColor(newImage, green, G_OFFSET);
+
+    const blue = Number(document.getElementById('blue-slider').value);
+    newImage = addColor(newImage, blue, B_OFFSET);
 
     const contrastValue = Number(document.getElementById('contrast-slider').value);
     newImage = contrast(newImage, contrastValue);
