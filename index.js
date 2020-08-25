@@ -145,7 +145,6 @@ function clamp(value) {
 
 const srcImage = loadImage(src);
 
-
 srcImage.addEventListener('load', () => {
     // ctx.drawImage(srcImage, canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2);
     ctx.drawImage(srcImage, 0, 0);
@@ -180,6 +179,7 @@ function runPipeline() {
     newImage = contrast(newImage, contrastValue);
 
     if(flipped) {
+        // (TODO) Fix this also flipping vertically
         // for(let i = 0; i <= (newImage.length / 2); i += 4) {
         //     for (let x = 0; x <= 3; x++) {
         //         let el = newImage[i - x];
