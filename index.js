@@ -33,26 +33,6 @@ function getPixelIndex(x, y) {
     return (x + y * imgData.width) * 4;
 }
 
-function setGrayscale(data) {
-    for(let i = 0; i < data.length; i += 4) {
-        // const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        const avg = data[i]*0.2126 + data[i + 1]*0.7152 + data[i + 2]*0.0722;
-        data[i]     = avg; // red
-        data[i + 1] = avg; // green
-        data[i + 2] = avg; // blue
-    }
-    return data;
-}
-
-function invertColors(data) {
-    for(let i = 0; i < data.length; i += 4) {
-        data[i]     = clamp(255 - data[i]); // red
-        data[i + 1] = clamp(255 - data[i + 1]); // green
-        data[i + 2] = clamp(255 - data[i + 2]); // blue
-    }
-    return data;
-}
-
 function boxBlur(imageData) {
     const data = imageData.data;
     for(let y = 0; y < imageData.height; y++) {
@@ -122,25 +102,26 @@ function addColor(data, value, colorOffset) {
     return data;
 }
 
-// function addColor(x, y, value, imageData, offset) {
-//     const index = getPixelIndex(x, y) + offset;
-//     imageData.data = 10;
-// }
+function setGrayscale(data) {
+    for(let i = 0; i < data.length; i += 4) {
+        const avg = data[i]*0.2126 + data[i + 1]*0.7152 + data[i + 2]*0.0722;
+        data[i]     = avg; // red
+        data[i + 1] = avg; // green
+        data[i + 2] = avg; // blue
+    }
+    return data;
+}
+
+function invertColors(data) {
+    for(let i = 0; i < data.length; i += 4) {
+        data[i]     = clamp(255 - data[i]); // red
+        data[i + 1] = clamp(255 - data[i + 1]); // green
+        data[i + 2] = clamp(255 - data[i + 2]); // blue
+    }
+    return data;
+}
 
 function changeBrightness(imageData, brightness) {
-    // const data = imageData.data;
-    // for(let y = 0; y < imageData.height; y++) {
-        // for(let x = 0; x < imageData.width; x++) {
-        //     const redIndex = getPixelIndex(x, y);
-        //     const greenIndex = getPixelIndex(x, y) + 1;
-        //     const blueIndex = getPixelIndex(x, y) + 2;
-        //
-        //     data[redIndex]   = clamp(data[redIndex] + brightness);
-        //     data[greenIndex] = clamp(data[greenIndex] + brightness);
-        //     data[blueIndex]  = clamp(data[blueIndex] + brightness);
-        //     
-        // }
-    // }
     for (let i = 0; i < imageData.length; i++) {
         imageData[i]    = clamp(imageData[i] + brightness);
         imageData[i + 1]= clamp(imageData[i + 1] + brightness);
@@ -197,10 +178,35 @@ function runPipeline() {
 
     const contrastValue = Number(document.getElementById('contrast-slider').value);
     newImage = contrast(newImage, contrastValue);
+
+    if(flipped) {
+        // for(let i = 0; i <= (newImage.length / 2); i += 4) {
+        //     for (let x = 0; x <= 3; x++) {
+        //         let el = newImage[i - x];
+        //         newImage[i - x] = newImage[newImage.length - i - x]; 
+        //         newImage[newImage.length - i - x] = el; 
+        //     }
+        // }
+            //
+            for(let x = 0; x < srcImage.height; x++) {
+                for(let y = 0; y < srcImage.width / 2; y++) {
+                    let index = getPixelIndex(x, y);
+                }
+            }
+    }
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
 
     for (let i = 0; i < imgData.data.length; i++) {
         imgData.data[i] = newImage[i]
     }
     ctx.putImageData(imgData, 0, 0);
+}
+
+let flipped = false;
+
+function flipHorizontally() {
+    flipped = !flipped; 
+
+    runPipeline();
+    return flipped;
 }
