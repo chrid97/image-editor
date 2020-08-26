@@ -192,21 +192,33 @@ function runPipeline() {
     newImage = customBoxBlur(newImage, blur);
 
 
-    if(flipped) {
-        // (TODO) Fix this also flipping vertically
-        for(let i = 0; i <= (newImage.length / 2); i += 4) {
-            for (let x = 0; x <= 3; x++) {
-                let el = newImage[i - x];
-                newImage[i - x] = newImage[newImage.length - i - x]; 
-                newImage[newImage.length - i - x] = el; 
+    if(horizontalFlip) {
+        for(let x = 0; x < srcImage.width; x++) {
+            for(let y = 0; y < srcImage.height / 2; y++) {
+                const topIndex = getPixelIndex(x, y);
+                const bottomIndex = getPixelIndex(x, srcImage.height - y) - 1;
+
+                const TOP_RED = newImage[topIndex];
+                const TOP_GREEN = newImage[topIndex + 1]; 
+                const TOP_BLUE =  newImage[topIndex + 2];
+                const TOP_ALPHA = newImage[topIndex + 3];
+
+                const BOTTOM_ALPHA = newImage[bottomIndex];
+                const BOTTOM_BLUE = newImage[bottomIndex - 1];
+                const BOTTOM_GREEN = newImage[bottomIndex - 2];
+                const BOTTOM_RED = newImage[bottomIndex - 3];
+
+                newImage[topIndex] = BOTTOM_RED; 
+                newImage[topIndex + 1] = BOTTOM_GREEN; 
+                newImage[topIndex + 2] = BOTTOM_BLUE; 
+                newImage[topIndex + 3] = BOTTOM_ALPHA; 
+
+                newImage[bottomIndex - 3] = TOP_RED;
+                newImage[bottomIndex - 2] = TOP_GREEN; 
+                newImage[bottomIndex - 1] = TOP_BLUE; 
+                newImage[bottomIndex] = TOP_ALPHA; 
             }
         }
-            //
-            // for(let x = 0; x < srcImage.height; x++) {
-            //     for(let y = 0; y < srcImage.width / 2; y++) {
-            //         let index = getPixelIndex(x, y);
-            //     }
-            // }
     }
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
 
@@ -216,13 +228,12 @@ function runPipeline() {
     ctx.putImageData(imgData, 0, 0);
 }
 
-let flipped = false;
+let horizontalFlip = false;
 
 function flipHorizontal() {
-    flipped = !flipped; 
+    horizontalFlip = !horizontalFlip; 
 
     runPipeline();
-    return flipped;
 }
 
 function flipVertical() {}
