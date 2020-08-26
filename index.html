@@ -66,6 +66,16 @@
                 <input class="slider" type="range" min="-255" max="255" value="0" id="contrast-slider" oninput="updateInput(this.value, 'contrast-input')">
             </div>
         <div>
+
+        <!-- Blur -->
+        <div class="slider">
+            <div class="label">
+                <label for="blur">Blur</label>
+                <input type="number" id="blur-input" min="-255" max="255" value="0" oninput="updateInput(this.value, 'blur-slider')">
+            </div>
+            <input class="slider" type="range" min="-255" max="255" value="0" id="blur-slider" oninput="updateInput(this.value, 'blur-input')">
+            </div>
+        <div>
     </aside>
     <div style="background-color: #171719">
         <canvas id="canvas"></canvas>

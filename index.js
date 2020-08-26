@@ -68,29 +68,39 @@ function centerOffset(x, y, yOffset = 0, xOffset = 0) {
     return getPixelIndex(x + xOffset, y + yOffset);
 }
 
-function customBoxBlur(imageData, strength) {
-    const data = imageData.data;
-    for(let y = 0; y < imageData.height; y++) {
-        for(let x = 0; x < imageData.width; x++) {
+// function customBoxBlur(imageData, strength) {
+//     const data = imageData.data;
+//     for(let y = 0; y < imageData.height; y++) {
+//         for(let x = 0; x < imageData.width; x++) {
+//             
+//             function blur(offset) {
+//                 let sum = 0;
+//                 for(let my = 0; my <= strength; my++) {
+//                     for(let mx = 0; mx <= strength; mx++) {
+//                         const index = getPixelIndex(x + mx, y + my);
+//                         const index2 = getPixelIndex(x - mx, y - my);
+//
+//                         sum += (data[index + offset] + data[index2 + offset]);
+//                     }
+//                 }
+//                 data[getPixelIndex(x,y) + offset] = sum / 9;
+//             }
+//
+//             blur(0);
+//             blur(1);
+//             blur(2);
+//         }
+//     }
+//     return imageData;
+// }
+
+function customBoxBlur(imageData, blur) {
+    for(let y = 0; y < srcImage.height; y++) {
+        for(let x = 0; x < srcImage.width; x++) {
             
-            function blur(offset) {
-                let sum = 0;
-                for(let my = 0; my <= strength; my++) {
-                    for(let mx = 0; mx <= strength; mx++) {
-                        const index = getPixelIndex(x + mx, y + my);
-                        const index2 = getPixelIndex(x - mx, y - my);
-
-                        sum += (data[index + offset] + data[index2 + offset]);
-                    }
-                }
-                data[getPixelIndex(x,y) + offset] = sum / 9;
-            }
-
-            blur(0);
-            blur(1);
-            blur(2);
         }
     }
+
     return imageData;
 }
 
@@ -177,6 +187,10 @@ function runPipeline() {
 
     const contrastValue = Number(document.getElementById('contrast-slider').value);
     newImage = contrast(newImage, contrastValue);
+
+    const blur = Number(document.getElementById('blur-slider').value);
+    newImage = customBoxBlur(newImage, blur);
+
 
     if(flipped) {
         // (TODO) Fix this also flipping vertically
