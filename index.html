@@ -9,7 +9,12 @@
     <aside class="sidebar">
         <div class="sidebar-content">
             
-            <button onclick="flipHorizontally()">Flip Horizontally</button>
+            <div class="transformations">
+                <span class="rotate"><img src="./assets/flip-horizontal.png" title="Flip Horizontal" onclick="flipHorizontal()"></span>
+                <span class="rotate"><img src="./assets/flip-vertical.png" title="Flip Vertical" onclick="flipVertical()"></span>
+                <span class="rotate"><img src="./assets/rotate-left.svg" title="Rotate Left" onclick="rotateLeft()"></span>
+                <span class="rotate"><img src="./assets/rotate-right.svg" title="Rotate Right" onclick="rotateRight()"></span>
+            </div>
 
             <div class="switch">
                 <label for="grayscale">Grayscale</label>

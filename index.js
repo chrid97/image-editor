@@ -97,7 +97,7 @@ function centerOffset(x, y, yOffset = 0, xOffset = 0) {
 function customBoxBlur(imageData, blur) {
     for(let y = 0; y < srcImage.height; y++) {
         for(let x = 0; x < srcImage.width; x++) {
-            
+            getPixelIndex(x, y);
         }
     }
 
@@ -194,19 +194,19 @@ function runPipeline() {
 
     if(flipped) {
         // (TODO) Fix this also flipping vertically
-        // for(let i = 0; i <= (newImage.length / 2); i += 4) {
-        //     for (let x = 0; x <= 3; x++) {
-        //         let el = newImage[i - x];
-        //         newImage[i - x] = newImage[newImage.length - i - x]; 
-        //         newImage[newImage.length - i - x] = el; 
-        //     }
-        // }
-            //
-            for(let x = 0; x < srcImage.height; x++) {
-                for(let y = 0; y < srcImage.width / 2; y++) {
-                    let index = getPixelIndex(x, y);
-                }
+        for(let i = 0; i <= (newImage.length / 2); i += 4) {
+            for (let x = 0; x <= 3; x++) {
+                let el = newImage[i - x];
+                newImage[i - x] = newImage[newImage.length - i - x]; 
+                newImage[newImage.length - i - x] = el; 
             }
+        }
+            //
+            // for(let x = 0; x < srcImage.height; x++) {
+            //     for(let y = 0; y < srcImage.width / 2; y++) {
+            //         let index = getPixelIndex(x, y);
+            //     }
+            // }
     }
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
 
@@ -218,9 +218,13 @@ function runPipeline() {
 
 let flipped = false;
 
-function flipHorizontally() {
+function flipHorizontal() {
     flipped = !flipped; 
 
     runPipeline();
     return flipped;
 }
+
+function flipVertical() {}
+function rotateLeft() {}
+function rotateRight() {}

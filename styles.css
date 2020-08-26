@@ -1,40 +1,40 @@
 html, body {
-    margin: 0;
-    padding 0;
-    height: 100vh;
+  margin: 0;
+  padding 0;
+  height: 100vh;
 }
 
 .container {
-    display: flex;
-    height: 100%;
+  display: flex;
+  height: 100%;
 }
 
 aside {
-    width: 240px;
-    /* background-color: #292C31; */
-    background-color: #1F2024;
-    color: white;
+  width: 240px;
+  /* background-color: #292C31; */
+  background-color: #1F2024;
+  color: white;
 }
 
 .sidebar-content {
-    padding: 0 20px;
+  padding: 0 20px;
 }
 
 .sidebar-content > div {
-    padding: 5px 0;
+  padding: 5px 0;
 }
 
 .label {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
 
 .label input:last-child {
-    background: none;
-    text-align: right;
-    color: #ddd;
-    border: 2px solid hsla(0,0%,100%,0);
+  background: none;
+  text-align: right;
+  color: #ddd;
+  border: 2px solid hsla(0,0%,100%,0);
 }
 
 input::-webkit-outer-spin-button,
@@ -48,8 +48,30 @@ input::-webkit-inner-spin-button {
 }
 
 .switch {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
+.transformations {
+  display: flex;
+  justify-content: space-between;
+}
 
+.transformations img {
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+}
+
+.rotate {
+  border-radius: 50%;
+  border: 2px solid hsla(0,0%,100%,.1);
+  background-color: rgba(0,0,0,.1);
+  width: 40px;
+  height: 40px;
+  transition: all .15s linear;
+}
+
+.rotate:hover {
+  background-color: white;
+}
