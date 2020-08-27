@@ -12,6 +12,7 @@ let imgData = undefined;
 let originalImageData = undefined;
 
 const src = "https://unsplash.it/640/480/?image=808";
+// const src = "https://placekitten.com/100/100";
 
 const grayscaleCheckbox = document.getElementById('grayscale');
 const invertCheckbox = document.getElementById('invert');
@@ -220,6 +221,35 @@ function runPipeline() {
             }
         }
     }
+
+    if(verticalFlip) {
+        for(let y = 0; y < srcImage.height; y++) {
+            for(let x = 0; x < srcImage.width/ 2; x++) {
+                const leftIndex = getPixelIndex(x, y);
+                const rightIndex = getPixelIndex(srcImage.width - x, y) - 1;
+
+                const LEFT_RED = newImage[leftIndex]; 
+                const LEFT_GREEN = newImage[leftIndex + 1]; 
+                const LEFT_BLUE =  newImage[leftIndex + 2];
+                const LEFT_ALPHA = newImage[leftIndex + 3];
+
+                const RIGHT_ALPHA = newImage[rightIndex];
+                const RIGHT_BLUE = newImage[rightIndex - 1];
+                const RIGHT_GREEN = newImage[rightIndex - 2];
+                const RIGHT_RED = newImage[rightIndex - 3]; 
+
+                newImage[leftIndex] = RIGHT_RED; 
+                newImage[leftIndex+ 1] = RIGHT_GREEN; 
+                newImage[leftIndex+ 2] = RIGHT_BLUE; 
+                newImage[leftIndex+ 3] = RIGHT_ALPHA; 
+
+                newImage[rightIndex - 3] = LEFT_RED;
+                newImage[rightIndex - 2] = LEFT_GREEN; 
+                newImage[rightIndex - 1] = LEFT_BLUE; 
+                newImage[rightIndex] = LEFT_ALPHA; 
+            }
+        }
+    }
         // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
 
     for (let i = 0; i < imgData.data.length; i++) {
@@ -229,6 +259,7 @@ function runPipeline() {
 }
 
 let horizontalFlip = false;
+let verticalFlip= false;
 
 function flipHorizontal() {
     horizontalFlip = !horizontalFlip; 
@@ -236,6 +267,11 @@ function flipHorizontal() {
     runPipeline();
 }
 
-function flipVertical() {}
+function flipVertical() {
+    verticalFlip = !verticalFlip; 
+
+    runPipeline();
+}
+
 function rotateLeft() {}
 function rotateRight() {}
