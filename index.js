@@ -197,7 +197,7 @@ function runPipeline() {
         for(let x = 0; x < srcImage.width; x++) {
             for(let y = 0; y < srcImage.height / 2; y++) {
                 const topIndex = getPixelIndex(x, y);
-                const bottomIndex = getPixelIndex(x, srcImage.height - y) - 1;
+                const bottomIndex = getPixelIndex(srcImage.width - x, srcImage.height - y) - 1;
 
                 const TOP_RED = newImage[topIndex];
                 const TOP_GREEN = newImage[topIndex + 1]; 
