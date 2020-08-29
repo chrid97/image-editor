@@ -6,7 +6,7 @@ const G_OFFSET = 1;
 const B_OFFSET = 2;
 
 canvas.width = document.body.clientWidth - 240;
-canvas.height = 1000;
+canvas.height = document.body.clientHeight;
 
 let imgData = undefined;
 let originalImageData = undefined;
