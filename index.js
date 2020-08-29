@@ -133,7 +133,7 @@ function invertColors(data) {
 }
 
 function changeBrightness(imageData, brightness) {
-    for (let i = 0; i < imageData.length; i++) {
+    for (let i = 0; i < imageData.length; i += 4) {
         imageData[i]    = clamp(imageData[i] + brightness);
         imageData[i + 1]= clamp(imageData[i + 1] + brightness);
         imageData[i + 2]= clamp(imageData[i + 2] + brightness);
