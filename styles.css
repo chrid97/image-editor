@@ -44,8 +44,20 @@ input::-webkit-inner-spin-button {
 }
 
 .slider {
-    width: 100%;
+  width: 100%;
 }
+
+.slider-label {
+  width: 100%;
+}
+
+/* .slider label:hover { */
+/*   display: none; */
+/* } */
+
+/* .slider .label label::before{ */
+/*   content: "Reset"; */
+/* } */
 
 .switch {
   display: flex;

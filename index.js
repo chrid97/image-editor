@@ -142,6 +142,9 @@ function changeBrightness(imageData, brightness) {
     return imageData;
 }
 
+// add later
+function setSepia(imgData) {}
+
 function contrast(imageData, contrastValue) {
     return imageData;
 }
@@ -239,14 +242,22 @@ function runPipeline() {
                 const RIGHT_RED = newImage[rightIndex - 3]; 
 
                 newImage[leftIndex] = RIGHT_RED; 
-                newImage[leftIndex+ 1] = RIGHT_GREEN; 
-                newImage[leftIndex+ 2] = RIGHT_BLUE; 
-                newImage[leftIndex+ 3] = RIGHT_ALPHA; 
+                newImage[leftIndex + 1] = RIGHT_GREEN; 
+                newImage[leftIndex + 2] = RIGHT_BLUE; 
+                newImage[leftIndex + 3] = RIGHT_ALPHA; 
 
                 newImage[rightIndex - 3] = LEFT_RED;
                 newImage[rightIndex - 2] = LEFT_GREEN; 
                 newImage[rightIndex - 1] = LEFT_BLUE; 
                 newImage[rightIndex] = LEFT_ALPHA; 
+            }
+        }
+    }
+
+    if(isRotatedRight) {
+        for(let y = 0; y < srcImage.height; y++) {
+            for(let x = 0; x < srcImage.width / 2; x++) {
+                const leftIndex = getPixelIndex(x, y);
             }
         }
     }
@@ -259,7 +270,8 @@ function runPipeline() {
 }
 
 let horizontalFlip = false;
-let verticalFlip= false;
+let verticalFlip = false;
+let isRotatedRight = false;
 
 function flipHorizontal() {
     horizontalFlip = !horizontalFlip; 
@@ -274,4 +286,36 @@ function flipVertical() {
 }
 
 function rotateLeft() {}
-function rotateRight() {}
+
+function rotateRight() {
+    isRotatedRight = !isRotatedRight;
+
+    runPipeline();
+}
+
+const sliderLabels = document.getElementsByClassName('slider-label');
+Array.from(sliderLabels).forEach((element) => {
+    const originalElementInnerText = element.innerText;
+
+    element.addEventListener('mouseover', (event) => {
+        const lowerCaseString = originalElementInnerText.toLowerCase();
+        const value = Number(document.getElementById(`${lowerCaseString}-slider`).value);
+        if(value > 0) {
+            element.innerText = 'Reset';
+        }
+    });
+
+    element.addEventListener('mouseout', (event) => {
+        element.innerText = originalElementInnerText;
+    });
+
+    element.onclick = (event) => {
+        const lowerCaseString = originalElementInnerText.toLowerCase();
+        const value = Number(document.getElementById(`${lowerCaseString}-slider`).value);
+        if(value > 0) {
+            updateInput(0, `${lowerCaseString}-slider`);          
+            updateInput(0, `${lowerCaseString}-input`);          
+            runPipeline();
+        }
+    }
+});
