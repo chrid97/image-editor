@@ -160,9 +160,8 @@ function clamp(value) {
 const srcImage = loadImage(src);
 
 srcImage.addEventListener('load', () => {
-    // ctx.drawImage(srcImage, canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2);
-    ctx.drawImage(srcImage, 0, 0);
-    imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height);
+    ctx.drawImage(srcImage, canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2);
+    imgData = ctx.getImageData(canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2, srcImage.width, srcImage.height);
 
     originalImageData = imgData.data.slice();
 }, false);
@@ -261,12 +260,12 @@ function runPipeline() {
             }
         }
     }
-        // ctx.putImageData(newImage, canvas.width / 2 - newImage.width / 2, canvas.height / 2 - newImage.height / 2);
 
     for (let i = 0; i < imgData.data.length; i++) {
         imgData.data[i] = newImage[i]
     }
-    ctx.putImageData(imgData, 0, 0);
+
+    ctx.putImageData(imgData, canvas.width / 2 - imgData.width / 2, canvas.height / 2 -imgData.height / 2);
 }
 
 let horizontalFlip = false;
