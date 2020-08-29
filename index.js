@@ -300,7 +300,7 @@ Array.from(sliderLabels).forEach((element) => {
     element.addEventListener('mouseover', (event) => {
         const lowerCaseString = originalElementInnerText.toLowerCase();
         const value = Number(document.getElementById(`${lowerCaseString}-slider`).value);
-        if(value > 0) {
+        if(value > 0 || value < 0) {
             element.innerText = 'Reset';
         }
     });
@@ -312,7 +312,7 @@ Array.from(sliderLabels).forEach((element) => {
     element.onclick = (event) => {
         const lowerCaseString = originalElementInnerText.toLowerCase();
         const value = Number(document.getElementById(`${lowerCaseString}-slider`).value);
-        if(value > 0) {
+        if(value > 0 || value < 0) {
             updateInput(0, `${lowerCaseString}-slider`);          
             updateInput(0, `${lowerCaseString}-input`);          
             runPipeline();
