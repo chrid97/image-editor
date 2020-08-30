@@ -8,21 +8,30 @@ const B_OFFSET = 2;
 canvas.width = document.body.clientWidth - 240;
 canvas.height = document.body.clientHeight;
 
+const srcImage = new Image();
 let imgData = undefined;
 let originalImageData = undefined;
 
-const src = "https://unsplash.it/640/480/?image=808";
+// const srcImage = loadImageFromUrl(src);
+// const src = "https://unsplash.it/640/480/?image=808";
 // const src = "https://placekitten.com/100/100";
 
+const fileInput = document.getElementById('fileInput');
 const grayscaleCheckbox = document.getElementById('grayscale');
 const invertCheckbox = document.getElementById('invert');
+
+fileInput.onchange = (event) => {
+    if (event.target.files && event.target.files.item(0)) {
+        srcImage.src = URL.createObjectURL(event.target.files[0]);
+    }
+}
 
 function updateInput(val, id) {
     document.getElementById(`${id}`).value = val;
     runPipeline();
 }
 
-function loadImage(url) {
+function loadImageFromUrl(url) {
     const image = new Image();
     image.crossOrigin = 'Anyonymous';
     image.src = url;
@@ -68,32 +77,6 @@ function boxBlur(imageData) {
 function centerOffset(x, y, yOffset = 0, xOffset = 0) {
     return getPixelIndex(x + xOffset, y + yOffset);
 }
-
-// function customBoxBlur(imageData, strength) {
-//     const data = imageData.data;
-//     for(let y = 0; y < imageData.height; y++) {
-//         for(let x = 0; x < imageData.width; x++) {
-//             
-//             function blur(offset) {
-//                 let sum = 0;
-//                 for(let my = 0; my <= strength; my++) {
-//                     for(let mx = 0; mx <= strength; mx++) {
-//                         const index = getPixelIndex(x + mx, y + my);
-//                         const index2 = getPixelIndex(x - mx, y - my);
-//
-//                         sum += (data[index + offset] + data[index2 + offset]);
-//                     }
-//                 }
-//                 data[getPixelIndex(x,y) + offset] = sum / 9;
-//             }
-//
-//             blur(0);
-//             blur(1);
-//             blur(2);
-//         }
-//     }
-//     return imageData;
-// }
 
 function customBoxBlur(imageData, blur) {
     for(let y = 0; y < srcImage.height; y++) {
@@ -156,8 +139,6 @@ function getImageData(image) {
 function clamp(value) {
     return Math.max(0, Math.min(Math.floor(value), 255))
 }
-
-const srcImage = loadImage(src);
 
 srcImage.addEventListener('load', () => {
     ctx.drawImage(srcImage, canvas.width / 2 - srcImage.width / 2, canvas.height / 2 - srcImage.height / 2);
@@ -317,4 +298,8 @@ Array.from(sliderLabels).forEach((element) => {
             runPipeline();
         }
     }
+});
+
+document.getElementById('canvas').addEventListener('wheel', () => {
+    console.log('hey');
 });
