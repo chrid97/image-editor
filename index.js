@@ -19,16 +19,17 @@ let originalImageData = undefined;
 const fileInput = document.getElementById('fileInput');
 const grayscaleCheckbox = document.getElementById('grayscale');
 const invertCheckbox = document.getElementById('invert');
+const contrastValue = document.getElementById('contrast-slider');
+const brightness = document.getElementById('brightness-input');
+const red = document.getElementById('red-slider');
+const green = document.getElementById('green-slider');
+const blue = document.getElementById('blue-slider');
+const blur = document.getElementById('blur-slider');
 
 fileInput.onchange = (event) => {
     if (event.target.files && event.target.files.item(0)) {
         srcImage.src = URL.createObjectURL(event.target.files[0]);
     }
-}
-
-function updateInput(val, id) {
-    document.getElementById(`${id}`).value = val;
-    runPipeline();
 }
 
 function loadImageFromUrl(url) {
@@ -37,6 +38,11 @@ function loadImageFromUrl(url) {
     image.src = url;
 
     return image;
+}
+
+function updateInput(val, id) {
+    document.getElementById(`${id}`).value = val;
+    runPipeline();
 }
 
 function getPixelIndex(x, y) {
@@ -157,23 +163,23 @@ function runPipeline() {
         newImage = invertColors(newImage);
     }
     
-    const brightness = Number(document.getElementById('brightness-input').value);
-    newImage = changeBrightness(newImage, brightness);
+    const brightnessFilter = Number(brightness.value);
+    newImage = changeBrightness(newImage, brightnessFilter);
     
-    const red = Number(document.getElementById('red-slider').value);
-    newImage = addColor(newImage, red, R_OFFSET);
+    const redFilter = Number(red.value);
+    newImage = addColor(newImage, redFilter, R_OFFSET);
 
-    const green = Number(document.getElementById('green-slider').value);
-    newImage = addColor(newImage, green, G_OFFSET);
+    const greenFilter = Number(green.value);
+    newImage = addColor(newImage, greenFilter, G_OFFSET);
 
-    const blue = Number(document.getElementById('blue-slider').value);
-    newImage = addColor(newImage, blue, B_OFFSET);
+    const blueFilter = Number(blue.value);
+    newImage = addColor(newImage, blueFilter, B_OFFSET);
 
-    const contrastValue = Number(document.getElementById('contrast-slider').value);
-    newImage = contrast(newImage, contrastValue);
+    const contrastFilter = Number(contrast.value);
+    newImage = contrast(newImage, contrastFilter);
 
-    const blur = Number(document.getElementById('blur-slider').value);
-    newImage = customBoxBlur(newImage, blur);
+    const blurFilter = Number(blur.value);
+    newImage = customBoxBlur(newImage, blurFilter);
 
 
     if(horizontalFlip) {
