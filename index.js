@@ -11,6 +11,7 @@ canvas.height = document.body.clientHeight;
 const srcImage = new Image();
 let imgData = undefined;
 let originalImageData = undefined;
+let newImage = undefined;
 
 // const srcImage = loadImageFromUrl(src);
 // const src = "https://unsplash.it/640/480/?image=808";
@@ -84,59 +85,35 @@ function centerOffset(x, y, yOffset = 0, xOffset = 0) {
     return getPixelIndex(x + xOffset, y + yOffset);
 }
 
-function customBoxBlur(imageData, blur) {
-    for(let y = 0; y < srcImage.height; y++) {
-        for(let x = 0; x < srcImage.width; x++) {
-            getPixelIndex(x, y);
-        }
-    }
+function customBoxBlur(imageData, blur) {}
 
-    return imageData;
+function addColor(currentPixelIndex, value, colorOffset) {
+    newImage[currentPixelIndex + colorOffset] = clamp(newImage[currentPixelIndex + colorOffset] + value);
 }
 
-function addColor(data, value, colorOffset) {
-    for(let i = 0; i < data.length; i += 4) {
-        data[i + colorOffset] = clamp(data[i + colorOffset] + value);
-    } 
-
-    return data;
+function setGrayscale(currentPixelIndex) {
+    const avg = newImage[currentPixelIndex]*0.2126 + newImage[currentPixelIndex + 1]*0.7152 + newImage[currentPixelIndex + 2]*0.0722;
+    newImage[currentPixelIndex]     = avg; // red
+    newImage[currentPixelIndex + 1] = avg; // green
+    newImage[currentPixelIndex + 2] = avg; // blue
 }
 
-function setGrayscale(data) {
-    for(let i = 0; i < data.length; i += 4) {
-        const avg = data[i]*0.2126 + data[i + 1]*0.7152 + data[i + 2]*0.0722;
-        data[i]     = avg; // red
-        data[i + 1] = avg; // green
-        data[i + 2] = avg; // blue
-    }
-    return data;
+function invertColors(currentPixelIndex) {
+    newImage[currentPixelIndex]     = clamp(255 - newImage[currentPixelIndex]); // red
+    newImage[currentPixelIndex + 1] = clamp(255 - newImage[currentPixelIndex + 1]); // green
+    newImage[currentPixelIndex + 2] = clamp(255 - newImage[currentPixelIndex + 2]); // blue
 }
 
-function invertColors(data) {
-    for(let i = 0; i < data.length; i += 4) {
-        data[i]     = clamp(255 - data[i]); // red
-        data[i + 1] = clamp(255 - data[i + 1]); // green
-        data[i + 2] = clamp(255 - data[i + 2]); // blue
-    }
-    return data;
-}
-
-function changeBrightness(imageData, brightness) {
-    for (let i = 0; i < imageData.length; i += 4) {
-        imageData[i]    = clamp(imageData[i] + brightness);
-        imageData[i + 1]= clamp(imageData[i + 1] + brightness);
-        imageData[i + 2]= clamp(imageData[i + 2] + brightness);
-    }
-
-    return imageData;
+function changeBrightness(currentPixelIndex, brightness) {
+    newImage[currentPixelIndex]    = clamp(newImage[currentPixelIndex] + brightness);
+    newImage[currentPixelIndex + 1]= clamp(newImage[currentPixelIndex + 1] + brightness);
+    newImage[currentPixelIndex + 2]= clamp(newImage[currentPixelIndex + 2] + brightness);
 }
 
 // add later
 function setSepia(imgData) {}
 
-function contrast(imageData, contrastValue) {
-    return imageData;
-}
+function contrast(imageData, contrastValue) {}
 
 function getImageData(image) {
     return ctx.getImageData(0, 0, image.width, image.height);
@@ -154,32 +131,39 @@ srcImage.addEventListener('load', () => {
 }, false);
 
 function runPipeline() {
-    let newImage = originalImageData.slice();
-    if(grayscaleCheckbox.checked) {
-        newImage = setGrayscale(newImage);
-    }
-
-    if(invertCheckbox.checked) {
-        newImage = invertColors(newImage);
-    }
+    newImage = originalImageData.slice();
     
-    const brightnessFilter = Number(brightness.value);
-    newImage = changeBrightness(newImage, brightnessFilter);
-    
-    const redFilter = Number(red.value);
-    newImage = addColor(newImage, redFilter, R_OFFSET);
+    for(let y = 0; y < srcImage.height; y++)  {
+        for(let x = 0; x < srcImage.width; x++) {
+            currentIndex = getPixelIndex(x, y);
 
-    const greenFilter = Number(green.value);
-    newImage = addColor(newImage, greenFilter, G_OFFSET);
+            if(grayscaleCheckbox.checked) {
+                setGrayscale(currentIndex);
+            }
 
-    const blueFilter = Number(blue.value);
-    newImage = addColor(newImage, blueFilter, B_OFFSET);
+            if(invertCheckbox.checked) {
+                invertColors(currentIndex);
+            }
 
-    const contrastFilter = Number(contrast.value);
-    newImage = contrast(newImage, contrastFilter);
+            const redFilter = Number(red.value);
+            addColor(currentIndex, redFilter, R_OFFSET);
 
-    const blurFilter = Number(blur.value);
-    newImage = customBoxBlur(newImage, blurFilter);
+            const greenFilter = Number(green.value);
+            addColor(currentIndex, greenFilter, G_OFFSET);
+
+            const blueFilter = Number(blue.value);
+            addColor(currentIndex, blueFilter, B_OFFSET); 
+
+            const brightnessFilter = Number(brightness.value);
+            changeBrightness(currentIndex, brightnessFilter);
+
+            const contrastFilter = Number(contrast.value);
+            contrast(currentIndex, contrastFilter);
+
+            const blurFilter = Number(blur.value);
+            customBoxBlur(currentIndex, blurFilter);
+        }
+    }
 
 
     if(horizontalFlip) {
