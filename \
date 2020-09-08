@@ -105,9 +105,9 @@ function invertColors(currentPixelIndex) {
 }
 
 function changeBrightness(currentPixelIndex, brightness) {
-    newImage[currentPixelIndex]     = clamp(newImage[currentPixelIndex] + brightness);
-    newImage[currentPixelIndex + 1] = clamp(newImage[currentPixelIndex + 1] + brightness);
-    newImage[currentPixelIndex + 2] = clamp(newImage[currentPixelIndex + 2] + brightness);
+    newImage[currentPixelIndex]    = clamp(newImage[currentPixelIndex] + brightness);
+    newImage[currentPixelIndex + 1]= clamp(newImage[currentPixelIndex + 1] + brightness);
+    newImage[currentPixelIndex + 2]= clamp(newImage[currentPixelIndex + 2] + brightness);
 }
 
 // add later
@@ -131,8 +131,6 @@ srcImage.addEventListener('load', () => {
 }, false);
 
 function runPipeline() {
-    ctx.fillStyle = '#171719';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     newImage = originalImageData.slice();
     
     for(let y = 0; y < srcImage.height; y++)  {
@@ -241,6 +239,7 @@ function runPipeline() {
     let resizedImage = undefined;
     if(zoomDistance > 0 || zoomDistance < 0) {
         resizedImage = nearestNeighbor(newImage, new ImageData(srcImage.width + zoomDistance, srcImage.height + zoomDistance));
+        ctx.clearRect(canvas.width, canvas.height, resizedImage.width, resizedImage.height);
     }
   
     if(zoomDistance > 0 || zoomDistance < 0) {
